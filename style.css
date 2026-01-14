@@ -89,6 +89,14 @@ section {
 section h2 {
   margin-bottom: 12px;
 }
+section {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+section:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.45);
+}
 
 /* FOOTER */
 footer {
@@ -125,6 +133,7 @@ footer {
     padding: 18px;
   }
 }
+
 
 
 
