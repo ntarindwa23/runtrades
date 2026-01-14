@@ -95,5 +95,34 @@ footer {
   text-align: center;
   padding: 20px;
 }
+/* MOBILE RESPONSIVE */
+@media (max-width: 600px) {
+  nav {
+    padding: 14px 16px;
+  }
+
+  .nav-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  header {
+    padding: 40px 14px;
+  }
+
+  header h1 {
+    font-size: 1.9rem;
+  }
+
+  main {
+    padding: 14px;
+  }
+
+  section {
+    padding: 18px;
+  }
+}
+
 
 
