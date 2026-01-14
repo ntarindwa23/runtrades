@@ -8,8 +8,8 @@
 /* GLOBAL */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f7fb;
-  color: #222;
+  background: #0b1c2d; /* dark blue */
+  color: #e6edf3;      /* light text */
   line-height: 1.6;
 }
 
@@ -123,6 +123,7 @@ footer {
     padding: 18px;
   }
 }
+
 
 
 
