@@ -37,7 +37,7 @@
       <p>Your trading performance at a glance</p>
       
       <div class="hero-actions">
-  <button class="btn primary">+ New Trade</button>
+  <button class="btn primary" id=openTrade>+ New Trade</button>
 </div>
     </section>
 
@@ -186,7 +186,92 @@
     </section>
 
   </main>
+<!-- New Trade Modal -->
+<div class="modal" id="tradeModal" aria-hidden="true">
+  <div class="modal-backdrop" id="closeBackdrop"></div>
+
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h2 id="modalTitle">New Trade</h2>
+      <button class="btn ghost" id="closeTrade">✕</button>
+    </div>
+
+    <form class="form" id="tradeForm">
+      <div class="form-grid">
+        <label>
+          <span>Pair</span>
+          <input type="text" placeholder="EURUSD" required>
+        </label>
+
+        <label>
+          <span>Direction</span>
+          <select required>
+            <option value="">Select</option>
+            <option>Buy</option>
+            <option>Sell</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Date</span>
+          <input type="date" required>
+        </label>
+
+        <label>
+          <span>P&amp;L ($)</span>
+          <input type="number" step="0.01" placeholder="e.g. 45.50" required>
+        </label>
+
+        <label class="full">
+          <span>Notes</span>
+          <textarea rows="4" placeholder="Why did you take this trade? What was your plan?"></textarea>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn ghost" id="cancelTrade">Cancel</button>
+        <button type="submit" class="btn primary">Save Trade</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById('openTrade');
+  const modal = document.getElementById('tradeModal');
+  const closeBtn = document.getElementById('closeTrade');
+  const cancelBtn = document.getElementById('cancelTrade');
+  const backdrop = document.getElementById('closeBackdrop');
+  const form = document.getElementById('tradeForm');
+
+  function openModal() {
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Saved (demo). Next step: store this trade in the browser or database.');
+    closeModal();
+    form.reset();
+  });
+</script>
 
 </body>
 </html>
+
 
