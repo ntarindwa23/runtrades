@@ -238,31 +238,6 @@
 </div>
 
 <script>
-  const openBtn = document.getElementById('openTrade');
-  const modal = document.getElementById('tradeModal');
-  const closeBtn = document.getElementById('closeTrade');
-  const cancelBtn = document.getElementById('cancelTrade');
-  const backdrop = document.getElementById('closeBackdrop');
-  const form = document.getElementById('tradeForm');
-
-  function openModal() {
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeModal() {
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  openBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', closeModal);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
 
   const openBtn = document.getElementById('openTrade');
   const modal = document.getElementById('tradeModal');
@@ -337,6 +312,7 @@
 
 </body>
 </html>
+
 
 
 
