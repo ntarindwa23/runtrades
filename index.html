@@ -246,12 +246,6 @@
   const backdrop = document.getElementById('closeBackdrop');
   const form = document.getElementById('tradeForm');
 
-  // Inputs
-  const pairEl = document.getElementById('pair');
-  const directionEl = document.getElementById('direction');
-  const dateEl = document.getElementById('date');
-  const pnlEl = document.getElementById('pnl');
-  const notesEl = document.getElementById('notes');
 
   const STORAGE_KEY = 'runtrades_trades';
 
@@ -284,6 +278,16 @@
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+const pairEl = document.getElementById('pair');
+const directionEl = document.getElementById('direction');
+const dateEl = document.getElementById('date');
+const pnlEl = document.getElementById('pnl');
+const notesEl = document.getElementById('notes');
+
+if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
+  alert('Form fields are missing IDs. Please refresh and try again.');
+  return;
+}
 
     const trade = {
       id: Date.now(),
@@ -312,6 +316,7 @@
 
 </body>
 </html>
+
 
 
 
