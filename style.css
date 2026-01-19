@@ -430,5 +430,59 @@ textarea{ resize: vertical; }
   .form-grid{ grid-template-columns: 1fr; }
 }
 
+/* ===== Trade History Table ===== */
+
+.table-wrap{
+  width:100%;
+  overflow:auto;
+  border-radius: 16px;
+}
+
+.table{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.table th,
+.table td{
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.88);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.table th{
+  color: rgba(255,255,255,0.65);
+  font-weight: 800;
+}
+
+.table td:nth-child(5){
+  white-space: normal;
+  min-width: 260px;
+}
+
+/* Delete button */
+.icon-btn{
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.icon-btn.danger{
+  border-color: rgba(255,95,122,0.35);
+  background: rgba(255,95,122,0.12);
+  color: #ff5f7a;
+}
+
+.icon-btn.danger:hover{
+  background: rgba(255,95,122,0.22);
+}
+
 
 
