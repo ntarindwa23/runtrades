@@ -277,6 +277,58 @@
 
 
   const STORAGE_KEY = 'runtrades_trades';
+const historyBody = document.getElementById('historyBody');
+const historyEmpty = document.getElementById('historyEmpty');
+const clearTradesBtn = document.getElementById('clearTradesBtn');
+
+function formatMoney(n){
+  const num = Number(n) || 0;
+  const sign = num >= 0 ? '+' : '';
+  return `${sign}${num.toFixed(2)}`;
+}
+
+function renderHistory(){
+  const trades = loadTrades();
+
+  if (!trades.length){
+    historyBody.innerHTML = '';
+    historyEmpty.style.display = 'block';
+    return;
+  }
+
+  historyEmpty.style.display = 'none';
+
+  const sorted = [...trades].sort((a,b) => (b.id || 0) - (a.id || 0));
+
+  historyBody.innerHTML = sorted.map(t => {
+    const dir = (t.direction || '').toLowerCase();
+    const dirClass = dir === 'sell' ? 'sell' : 'buy';
+    const pnl = Number(t.pnl || 0);
+    const pnlClass = pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+    const safeNotes = (t.notes || '').replaceAll('<','&lt;').replaceAll('>','&gt;');
+
+    return `
+      <tr>
+        <td>${t.date || ''}</td>
+        <td>${(t.pair || '').toUpperCase()}</td>
+        <td><span class="badge ${dirClass}">${t.direction || ''}</span></td>
+        <td class="${pnlClass}">${formatMoney(pnl)}</td>
+        <td style="max-width:360px; white-space:pre-wrap;">${safeNotes}</td>
+        <td>
+          <div class="row-actions">
+            <button class="icon-btn" data-delete="${t.id}" type="button">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function deleteTrade(id){
+  const trades = loadTrades().filter(t => String(t.id) !== String(id));
+  saveTrades(trades);
+  renderHistory();
+}
 
   function openModal() {
     modal.classList.add('show');
@@ -335,16 +387,33 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
     const trades = loadTrades();
     trades.push(trade);
     saveTrades(trades);
+    renderHistory();
+
 
     alert(`Trade saved ✅ (Total trades: ${trades.length})`);
 
     form.reset();
     closeModal();
   });
+  historyBody.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-delete]');
+  if (!btn) return;
+  deleteTrade(btn.getAttribute('data-delete'));
+});
+
+clearTradesBtn.addEventListener('click', () => {
+  const ok = confirm('Delete ALL trades? This cannot be undone.');
+  if (!ok) return;
+  saveTrades([]);
+  renderHistory();
+});
+renderHistory();
+
 </script>
 
 </body>
 </html>
+
 
 
 
