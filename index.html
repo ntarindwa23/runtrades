@@ -236,6 +236,35 @@
     </form>
   </div>
 </div>
+<!-- Trade History -->
+<section class="panel" id="history">
+  <div class="panel-head">
+    <h2>Trade History</h2>
+    <div class="panel-actions">
+      <button class="btn ghost" id="clearTradesBtn" type="button">Clear all</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Pair</th>
+          <th>Direction</th>
+          <th>P&amp;L</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+
+    <p class="empty" id="historyEmpty" style="display:none;">
+      No trades yet. Add your first trade.
+    </p>
+  </div>
+</section>
 
 <script>
 
@@ -316,6 +345,7 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
 
 </body>
 </html>
+
 
 
 
