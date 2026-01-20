@@ -302,6 +302,110 @@ function deleteTrade(id){
   function saveTrades(trades) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
   }
+// ===== Calendar (OUTSIDE submit) =====
+const calGrid = document.getElementById("calGrid");
+const calMonthLabel = document.getElementById("calMonthLabel");
+const calPrev = document.getElementById("calPrev");
+const calNext = document.getElementById("calNext");
+const calToday = document.getElementById("calToday");
+
+let calCursor = new Date(2026, 0, 1); // Jan 2026
+
+function monthName(m){
+  return ["January","February","March","April","May","June","July","August","September","October","November","December"][m];
+}
+
+function ymd(date){
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function sumPnlForDate(trades, dateStr){
+  let total = 0, count = 0;
+  for (const t of trades){
+    if (t.date === dateStr){
+      total += Number(t.pnl) || 0;
+      count++;
+    }
+  }
+  return { total, count };
+}
+
+function renderCalendar(){
+  if(!calGrid) return;
+
+  const year = calCursor.getFullYear();
+  const month = calCursor.getMonth();
+  calMonthLabel.textContent = `${monthName(month)} ${year}`;
+
+  calGrid.innerHTML = "";
+
+  // headers
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
+    const el = document.createElement("div");
+    el.className = "dow";
+    el.textContent = d;
+    calGrid.appendChild(el);
+  });
+
+  const first = new Date(year, month, 1);
+  const last = new Date(year, month + 1, 0);
+  const startPad = first.getDay();
+  const totalDays = last.getDate();
+
+  const trades = loadTrades();
+
+  for(let i=0; i<startPad; i++){
+    const empty = document.createElement("div");
+    empty.className = "day empty";
+    calGrid.appendChild(empty);
+  }
+
+  for(let day=1; day<=totalDays; day++){
+    const dateObj = new Date(year, month, day);
+    const dateStr = ymd(dateObj);
+    const { total, count } = sumPnlForDate(trades, dateStr);
+
+    const cell = document.createElement("div");
+    cell.className = "day";
+    cell.dataset.date = dateStr;
+
+    const num = document.createElement("span");
+    num.className = "num";
+    num.textContent = day;
+    cell.appendChild(num);
+
+    if(count > 0){
+      const pnl = document.createElement("div");
+      pnl.style.marginTop = "8px";
+      pnl.style.fontWeight = "700";
+      pnl.style.fontSize = "0.9rem";
+      pnl.textContent = `${total >= 0 ? "+" : ""}${total.toFixed(2)}`;
+      cell.appendChild(pnl);
+    }
+
+    calGrid.appendChild(cell);
+  }
+}
+
+if (calPrev) calPrev.addEventListener("click", () => {
+  calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() - 1, 1);
+  renderCalendar();
+});
+if (calNext) calNext.addEventListener("click", () => {
+  calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() + 1, 1);
+  renderCalendar();
+});
+if (calToday) calToday.addEventListener("click", () => {
+  const now = new Date();
+  calCursor = new Date(now.getFullYear(), now.getMonth(), 1);
+  renderCalendar();
+});
+
+// first render
+renderCalendar();
 
   openBtn.addEventListener('click', openModal);
   closeBtn.addEventListener('click', closeModal);
@@ -324,130 +428,7 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
   alert('Form fields are missing IDs. Please refresh and try again.');
   return;
 }
-// ===== Step 2.2: Calendar (generate grid + show trade totals) =====
-const calGrid = document.getElementById("calGrid");
-const calMonthLabel = document.getElementById("calMonthLabel");
-const calPrev = document.getElementById("calPrev");
-const calNext = document.getElementById("calNext");
-const calToday = document.getElementById("calToday");
 
-let calCursor = new Date(); // current viewed month
-
-function monthName(m){
-  return ["January","February","March","April","May","June","July","August","September","October","November","December"][m];
-}
-
-function ymd(date){
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-function sumPnlForDate(trades, dateStr){
-  let total = 0;
-  let count = 0;
-  for(const t of trades){
-    if(t.date === dateStr){
-      total += Number(t.pnl) || 0;
-      count++;
-    }
-  }
-  return { total, count };
-}
-
-function renderCalendar(){
-  if(!calGrid) return;
-
-  const year = calCursor.getFullYear();
-  const month = calCursor.getMonth();
-
-  calMonthLabel.textContent = `${monthName(month)} ${year}`;
-  calGrid.innerHTML = "";
-
-  // Day-of-week headers
-  const dows = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  for(const d of dows){
-    const el = document.createElement("div");
-    el.className = "dow";
-    el.textContent = d;
-    calGrid.appendChild(el);
-  }
-
-  const first = new Date(year, month, 1);
-  const last = new Date(year, month + 1, 0);
-  const startPad = first.getDay(); // 0..6
-  const totalDays = last.getDate();
-
-  const trades = loadTrades();
-
-  // Empty pads
-  for(let i=0; i<startPad; i++){
-    const empty = document.createElement("div");
-    empty.className = "cal-day muted";
-    empty.innerHTML = `<div class="cal-day-num"></div>`;
-    calGrid.appendChild(empty);
-  }
-
-  // Days
-  for(let day=1; day<=totalDays; day++){
-    const dateObj = new Date(year, month, day);
-    const dateStr = ymd(dateObj);
-
-    const { total, count } = sumPnlForDate(trades, dateStr);
-
-    const cell = document.createElement("div");
-    cell.className = "cal-day";
-    cell.dataset.date = dateStr;
-
-    let badges = "";
-    if(count > 0){
-      const cls = total >= 0 ? "pos" : "neg";
-      const sign = total >= 0 ? "+" : "";
-      badges = `
-        <div class="cal-badges">
-          <span class="cal-chip ${cls}">${sign}${total.toFixed(2)}</span>
-          <span class="cal-chip">${count} trade${count>1?"s":""}</span>
-        </div>
-      `;
-    }
-
-    cell.innerHTML = `
-      <div class="cal-day-num">${day}</div>
-      ${badges}
-    `;
-
-    calGrid.appendChild(cell);
-  }
-}
-
-// Buttons
-calPrev.addEventListener("click", () => {
-  calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() - 1, 1);
-  renderCalendar();
-});
-
-calNext.addEventListener("click", () => {
-  calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() + 1, 1);
-  renderCalendar();
-});
-
-calToday.addEventListener("click", () => {
-  calCursor = new Date();
-  calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth(), 1);
-  renderCalendar();
-});
-
-// Re-render calendar when you save a trade
-const originalSaveTrades = saveTrades;
-function saveTrades(trades){
-  originalSaveTrades(trades);
-  renderCalendar();
-}
-
-// First render
-calCursor = new Date(2026, 0, 1); // start at Jan 2026 (same as your UI)
-renderCalendar();
 
     const trade = {
       id: Date.now(),
@@ -467,6 +448,7 @@ renderCalendar();
     trades.push(trade);
     saveTrades(trades);
     renderHistory();
+    renderCalendar();
 
 
     alert(`Trade saved ✅ (Total trades: ${trades.length})`);
@@ -492,6 +474,7 @@ renderHistory();
 
 </body>
 </html>
+
 
 
 
