@@ -479,6 +479,10 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
   const calDayTitle = document.getElementById("calDayTitle");
   const calDayList = document.getElementById("calDayList");
   const calCloseDetails = document.getElementById("calCloseDetails");
+const calDayDetails = document.getElementById("calDayDetails");
+const calDayTitle = document.getElementById("calDayTitle");
+const calDayList = document.getElementById("calDayList");
+const calCloseDetails = document.getElementById("calCloseDetails");
 
   function showDayDetails(dateStr) {
     const trades = loadTrades().filter(t => t.date === dateStr);
@@ -560,6 +564,7 @@ renderHistory();
 
 </body>
 </html>
+
 
 
 
