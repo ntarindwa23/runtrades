@@ -406,6 +406,8 @@ function renderCalendar(){
     // ✅ CLICK DAY -> show details
     cell.addEventListener("click", () => {
       showDayDetails(dateStr);
+      cell.addEventListener("click", () => showDayDetails(dateStr));
+
     });
 
     calGrid.appendChild(cell);
@@ -558,6 +560,7 @@ renderHistory();
 
 </body>
 </html>
+
 
 
 
