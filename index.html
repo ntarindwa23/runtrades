@@ -386,9 +386,8 @@ function renderCalendar(){
   calMonthLabel.textContent = `${monthName(month)} ${year}`;
 
   calGrid.innerHTML = "";
-cell.addEventListener("click", () => {
-  showDayDetails(dateStr);
-});
+
+}
 
   // headers
   ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
@@ -541,6 +540,7 @@ if (calCloseDetails) {
 
 </body>
 </html>
+
 
 
 
