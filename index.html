@@ -433,16 +433,11 @@ cell.addEventListener("click", () => {
       pnl.textContent = `${total >= 0 ? "+" : ""}${total.toFixed(2)}`;
       cell.appendChild(pnl);
     }
-    // ✅ CLICK DAY -> show details
-    cell.addEventListener("click", () => {
-      showDayDetails(dateStr);
       cell.addEventListener("click", () => showDayDetails(dateStr));
-
     });
 
     calGrid.appendChild(cell);
   }
-}
 
 if (calPrev) calPrev.addEventListener("click", () => {
   calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() - 1, 1);
@@ -504,55 +499,12 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
     renderHistory();
     renderCalendar();
 
-  function showDayDetails(dateStr) {
-    const trades = loadTrades().filter(t => t.date === dateStr);
-
-    if (calDayTitle) calDayTitle.textContent = `Trades — ${dateStr}`;
-
-    if (!trades.length) {
-      calDayList.innerHTML = `<div class="cal-empty">No trades on this day.</div>`;
-    } else {
-      calDayList.innerHTML = trades
-        .sort((a,b) => (b.id||0) - (a.id||0))
-        .map(t => {
-          const pnl = Number(t.pnl || 0);
-          const pnlClass = pnl >= 0 ? "pnl-pos" : "pnl-neg";
-          const dir = (t.direction || "").toLowerCase();
-          const dirClass = dir === "sell" ? "sell" : "buy";
-          const notes = (t.notes || "").replaceAll("<","&lt;").replaceAll(">","&gt;");
-
-          return `
-            <div class="cal-trade">
-              <div class="cal-trade-top">
-                <div class="cal-pair">${(t.pair||"").toUpperCase()}</div>
-                <div class="badge ${dirClass}">${t.direction || ""}</div>
-                <div class="cal-pnl ${pnlClass}">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}</div>
-              </div>
-              ${notes ? `<div class="cal-notes">${notes}</div>` : ""}
-            </div>
-          `;
-        })
-        .join("");
-    }
 
     calDayDetails.style.display = "block";
   }
 
   function hideDayDetails() {
     calDayDetails.style.display = "none";
-  }
-
-  // Click on calendar day
-  if (calGrid) {
-    calGrid.addEventListener("click", (e) => {
-      const cell = e.target.closest(".cal-day");
-      if (!cell) return;
-
-      const dateStr = cell.dataset.date;
-      if (!dateStr) return; // ignore empty cells / headers
-
-      showDayDetails(dateStr);
-    });
   }
 
   // Close button
@@ -589,6 +541,7 @@ if (calCloseDetails) {
 
 </body>
 </html>
+
 
 
 
