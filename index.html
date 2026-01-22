@@ -222,6 +222,11 @@
 </section>
 
 <script>
+// ===== Calendar day details elements (GLOBAL) =====
+const calDayDetails = document.getElementById("calDayDetails");
+const calDayTitle = document.getElementById("calDayTitle");
+const calDayList = document.getElementById("calDayList");
+const calCloseDetails = document.getElementById("calCloseDetails");
 
   const openBtn = document.getElementById('openTrade');
   const modal = document.getElementById('tradeModal');
@@ -240,6 +245,28 @@ function formatMoney(n){
   const num = Number(n) || 0;
   const sign = num >= 0 ? '+' : '';
   return `${sign}${num.toFixed(2)}`;
+}
+function showDayDetails(dateStr) {
+  const trades = loadTrades().filter(t => t.date === dateStr);
+
+  if (calDayTitle) {
+    calDayTitle.textContent = `Trades – ${dateStr}`;
+  }
+
+  if (!trades.length) {
+    calDayList.innerHTML = `<div class="cal-empty">No trades on this day.</div>`;
+  } else {
+    calDayList.innerHTML = trades.map(t => `
+      <div class="cal-trade-row">
+        <strong>${t.pair}</strong> (${t.direction})
+        <span class="${t.pnl >= 0 ? "pos" : "neg"}">
+          ${t.pnl >= 0 ? "+" : ""}${t.pnl.toFixed(2)}
+        </span>
+      </div>
+    `).join("");
+  }
+
+  calDayDetails.style.display = "block";
 }
 
 function renderHistory(){
@@ -359,6 +386,9 @@ function renderCalendar(){
   calMonthLabel.textContent = `${monthName(month)} ${year}`;
 
   calGrid.innerHTML = "";
+cell.addEventListener("click", () => {
+  showDayDetails(dateStr);
+});
 
   // headers
   ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
@@ -559,11 +589,17 @@ clearTradesBtn.addEventListener('click', () => {
   renderHistory();
 });
 renderHistory();
+if (calCloseDetails) {
+  calCloseDetails.addEventListener("click", () => {
+    calDayDetails.style.display = "none";
+  });
+}
 
 </script>
 
 </body>
 </html>
+
 
 
 
