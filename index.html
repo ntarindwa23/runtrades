@@ -414,7 +414,7 @@ if (!pairEl || !directionEl || !dateEl || !pnlEl || !notesEl) {
     renderCalendar();
 
 
-    calDayDetails.style.display = "block";
+if (calDayDetails) calDayDetails.style.display = "block";
   }
 
   function hideDayDetails() {
@@ -455,6 +455,7 @@ if (calCloseDetails) {
 
 </body>
 </html>
+
 
 
 
