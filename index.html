@@ -246,28 +246,7 @@ function formatMoney(n){
   const sign = num >= 0 ? '+' : '';
   return `${sign}${num.toFixed(2)}`;
 }
-function showDayDetails(dateStr) {
-  const trades = loadTrades().filter(t => t.date === dateStr);
 
-  if (calDayTitle) {
-    calDayTitle.textContent = `Trades – ${dateStr}`;
-  }
-
-  if (!trades.length) {
-    calDayList.innerHTML = `<div class="cal-empty">No trades on this day.</div>`;
-  } else {
-    calDayList.innerHTML = trades.map(t => `
-      <div class="cal-trade-row">
-        <strong>${t.pair}</strong> (${t.direction})
-        <span class="${t.pnl >= 0 ? "pos" : "neg"}">
-          ${t.pnl >= 0 ? "+" : ""}${t.pnl.toFixed(2)}
-        </span>
-      </div>
-    `).join("");
-  }
-
-  calDayDetails.style.display = "block";
-}
 
 function renderHistory(){
   const trades = loadTrades();
@@ -329,7 +308,8 @@ function deleteTrade(id){
   function saveTrades(trades) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
   }
-// ===== Calendar (OUTSIDE submit) =====
+
+  // ===== Calendar (OUTSIDE submit) ====
 const calGrid = document.getElementById("calGrid");
 const calMonthLabel = document.getElementById("calMonthLabel");
 const calPrev = document.getElementById("calPrev");
@@ -359,25 +339,7 @@ function sumPnlForDate(trades, dateStr){
   }
   return { total, count };
 }
-function showDayDetails(dateStr) {
-    const trades = loadTrades().filter(t => t.date === dateStr);
 
-    if (calDayTitle) calDayTitle.textContent = `Trades — ${dateStr}`;
-
-    if (!trades.length) {
-      calDayList.innerHTML = `<div class="cal-empty">No trades on this day.</div>`;
-    } else {
-      calDayList.innerHTML = trades.map(t => `
-        <div class="cal-trade">
-          <strong>${t.pair}</strong>
-          <span>${t.direction}</span>
-          <span>${Number(t.pnl) >= 0 ? '+' : ''}${Number(t.pnl).toFixed(2)}</span>
-        </div>
-      `).join('');
-    }
-
-    calDayDetails.style.display = 'block';
-  }
 function renderCalendar(){
   if(!calGrid) return;
 
@@ -389,55 +351,8 @@ function renderCalendar(){
 
 }
 
-  // headers
-  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
-    const el = document.createElement("div");
-    el.className = "dow";
-    el.textContent = d;
-    calGrid.appendChild(el);
-  });
 
-  const first = new Date(year, month, 1);
-  const last = new Date(year, month + 1, 0);
-  const startPad = first.getDay();
-  const totalDays = last.getDate();
-
-  const trades = loadTrades();
-
-  for(let i=0; i<startPad; i++){
-    const empty = document.createElement("div");
-    empty.className = "day empty";
-    calGrid.appendChild(empty);
-  }
-
-  for(let day=1; day<=totalDays; day++){
-    const dateObj = new Date(year, month, day);
-    const dateStr = ymd(dateObj);
-    const { total, count } = sumPnlForDate(trades, dateStr);
-
-    const cell = document.createElement("div");
-    cell.className = "day";
-    cell.dataset.date = dateStr;
-
-    const num = document.createElement("span");
-    num.className = "num";
-    num.textContent = day;
-    cell.appendChild(num);
-
-    if(count > 0){
-      const pnl = document.createElement("div");
-      pnl.style.marginTop = "8px";
-      pnl.style.fontWeight = "700";
-      pnl.style.fontSize = "0.9rem";
-      pnl.textContent = `${total >= 0 ? "+" : ""}${total.toFixed(2)}`;
-      cell.appendChild(pnl);
-    }
-      cell.addEventListener("click", () => showDayDetails(dateStr));
-    };
-
-    calGrid.appendChild(cell);
   
-
 if (calPrev) calPrev.addEventListener("click", () => {
   calCursor = new Date(calCursor.getFullYear(), calCursor.getMonth() - 1, 1);
   renderCalendar();
@@ -540,6 +455,7 @@ if (calCloseDetails) {
 
 </body>
 </html>
+
 
 
 
